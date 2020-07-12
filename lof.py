@@ -59,7 +59,7 @@ class LOF:
     
     def getPrice(self, code):
         df = ts.get_realtime_quotes(code)
-        if df.shape[0]>0:
+        if df:
             e = df[['code', 'name', 'price', 'time']]
             n = df[u'name'].values[0]
             p = df[u'price'].values[0]
@@ -67,7 +67,7 @@ class LOF:
             rate = str(format(float(p)*100/float(p_close)-100 , '.2f'))+'%'
             #print(n+p+',昨日'+p_close)
             return n+':'+p+',昨日'+p_close+',变化'+rate
-        return '股票无'
+        return code+'无'
 
     def md2(self):
         result =''
