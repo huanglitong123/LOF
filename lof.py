@@ -5,7 +5,7 @@ import pytz
 import json
 import configparser
 from datetime import datetime
-
+import tushare as ts
 
 class LOF:
     def __init__(self):
@@ -54,6 +54,23 @@ class LOF:
             res.append("| " + " | ".join(list(i.values())) + " |")
         res = "\n".join(res)
         return res
+    
+    def getPrice(self, code):
+        df = ts.get_realtime_quotes(code)
+        e = df[['code', 'name', 'price', 'time']]
+        n = df[u'name'].values[0]
+        p = df[u'price'].values[0]
+        p_close =  df[u'pre_close'].values[0]
+        rate = str(format(float(p)*100/float(p_close)-100 , '.2f'))+'%'
+        #print(n+p+',昨日'+p_close)
+        return n+':'+p+',昨日'+p_close+',变化'+rate
+
+    def md2(self):
+        result =''
+        for code in code_list:
+            result =result+ check(code)+'\n'
+        print(result)
+        return result
 
     def message(self, key, title, body):
         msg_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, title, body)
@@ -63,7 +80,8 @@ class LOF:
         info = self.getInfo(id)
         if len(info):
             md = self.md(info)
-            self.message(self.apiKey, "LOF-溢价: " + datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%m-%d %H:%M"), md)
+            md2 = self.md2()
+            self.message(self.apiKey, "LOF-溢价: " + datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%m-%d %H:%M"), md+md2)
 
 
 if __name__ == "__main__":
