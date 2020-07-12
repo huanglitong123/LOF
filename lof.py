@@ -21,6 +21,8 @@ class LOF:
         if self.disLimit < 0.: self.disLimit = 0.
         if self.preLimit > 0.: self.preLimit = 0.
         self.apiKey = self.cp.get('LOF', 'apiKey')
+        
+        self.StockList = self.cp.get('LOF', 'StockList')
 
         self.session = requests.Session()
         header = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.80 Safari/537.36",}
@@ -67,8 +69,8 @@ class LOF:
 
     def md2(self):
         result =''
-        for code in code_list:
-            result =result+ check(code)+'\n'
+        for code in self.StockList:
+            result =result+ getPrice(code)+'\n'
         print(result)
         return result
 
