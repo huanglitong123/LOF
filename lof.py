@@ -70,7 +70,7 @@ class LOF:
     def md2(self):
         result =''
         for code in self.StockList:
-            result =result+ getPrice(code)+'\n'
+            result =result+ self.getPrice(code)+'\n'
         print(result)
         return result
 
